@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SmackLearn — Master What You Learn</title>
+
+    <meta
+        name="description"
+        content="Transform your study notes into summaries, quizzes, and flashcards with SmackLearn."
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="css/learning.css">
+
+    <script src="js/learning.js" defer></script>
+</head>
+
+<body>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero" id="home">
+
+        <video
+            class="hero-video"
+            id="heroVideo"
+            autoplay
+            muted
+            playsinline
+            preload="auto"
+        >
+            <source
+                src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_074625_a81f018a-956b-43fb-9aee-4d1508e30e6a.mp4"
+                type="video/mp4"
+            >
+        </video>
+
+        <div class="hero-overlay"></div>
+
+        <nav class="navbar liquid-glass">
+
+            <a href="index.html" class="brand">
+                <span class="brand-icon">S</span>
+                <span>SmackLearn</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#workspace">Start studying</a>
+                <a href="#about">About</a>
+            </div>
+
+            <a href="#workspace" class="login-button liquid-glass">
+                Start now <span>↗</span>
+            </a>
+
+        </nav>
+
+        <main class="hero-content">
+
+            <div class="eyebrow">
+                <span class="status-dot"></span>
+                YOUR PERSONAL LEARNING SPACE
+            </div>
+
+            <h1>
+                Understand it.<br>
+                <em>Master it.</em>
+            </h1>
+
+            <p class="hero-description">
+                Turn your notes into knowledge. Create summaries,
+                practice with quizzes, and learn at your own pace.
+            </p>
+
+            <a href="#workspace" class="hero-button">
+                Start learning <span>↗</span>
+            </a>
+
+            <div class="hero-caption">
+                LESS CRAMMING. MORE UNDERSTANDING.
+            </div>
+
+        </main>
+
+        <div class="hero-footer">
+            <span>LEARN SOMETHING NEW TODAY</span>
+            <a href="#workspace">SCROLL TO EXPLORE ↓</a>
+        </div>
+
+    </section>
+
+
+    <!-- INTRODUCTION -->
+
+    <section class="intro section-padding" id="about">
+
+        <div class="section-label">01 / OUR APPROACH</div>
+
+        <h2>
+            Learning isn't about memorizing everything.
+            It's about <em>understanding what matters.</em>
+        </h2>
+
+        <p class="intro-description">
+            SmackLearn helps you turn study material into something
+            easier to understand, remember, and practice.
+        </p>
+
+    </section>
+
+
+    <!-- STUDY WORKSPACE -->
+
+    <section class="workspace section-padding" id="workspace">
+
+        <div class="section-label">02 / YOUR WORKSPACE</div>
+
+        <div class="workspace-heading">
+            <div>
+                <h2>Let's make it <em>click.</em></h2>
+
+                <p>
+                    Bring your study material. We'll help you work through it.
+                </p>
+            </div>
+
+            <div class="workspace-badge liquid-glass">
+                YOUR STUDY SPACE
+            </div>
+        </div>
+
+        <div class="study-layout">
+
+            <!-- INPUT CARD -->
+
+            <div class="study-card liquid-glass">
+
+                <div class="card-topline">
+                    <span>YOUR STUDY MATERIAL</span>
+                    <span id="characterCount">0 characters</span>
+                </div>
+
+                <label for="studyNotes" class="input-label">
+                    What are you learning today?
+                </label>
+
+                <textarea
+                    id="studyNotes"
+                    placeholder="Paste your class notes, textbook content, definitions, or anything you want to understand..."
+                    rows="10"
+                ></textarea>
+
+                <div class="input-footer">
+                    <button id="clearNotes" class="text-button" type="button">
+                        Clear notes
+                    </button>
+
+                    <span>Start with your own material.</span>
+                </div>
+
+            </div>
+
+
+            <!-- OPTIONS CARD -->
+
+            <div class="study-card options-card liquid-glass">
+
+                <div class="card-topline">
+                    <span>PERSONALIZE YOUR SESSION</span>
+                </div>
+
+                <h3>Make it yours.</h3>
+
+                <div class="form-group">
+                    <label for="studyStyle">Explanation style</label>
+
+                    <select id="studyStyle">
+                        <option value="simple">Simple and beginner-friendly</option>
+                        <option value="detailed">Detailed explanation</option>
+                        <option value="exam">Exam-ready notes</option>
+                        <option value="examples">Examples and analogies</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quizDifficulty">Quiz difficulty</label>
+
+                    <select id="quizDifficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="outputType">What do you want to create?</label>
+
+                    <select id="outputType">
+                        <option value="all">Everything</option>
+                        <option value="summary">Summary</option>
+                        <option value="quiz">Quiz</option>
+                        <option value="flashcards">Flashcards</option>
+                    </select>
+                </div>
+
+                <button id="generateButton" class="generate-button" type="button">
+                    <span>Generate study materials</span>
+                    <span>↗</span>
+                </button>
+
+                <p class="privacy-note">
+                    Your learning journey starts with one topic.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- GENERATED CONTENT -->
+
+        <div class="results-section" id="resultsSection">
+
+            <div class="results-heading">
+                <div>
+                    <div class="section-label">03 / YOUR LEARNING KIT</div>
+                    <h2>Your materials, <em>reimagined.</em></h2>
+                </div>
+
+                <span class="results-status" id="resultsStatus">
+                    READY TO LEARN
+                </span>
+            </div>
+
+            <div class="results-card liquid-glass">
+
+                <div class="result-tabs" role="tablist">
+
+                    <button
+                        class="result-tab active"
+                        data-tab="summary"
+                        type="button"
+                        role="tab"
+                        aria-selected="true"
+                    >
+                        Summary
+                    </button>
+
+                    <button
+                        class="result-tab"
+                        data-tab="quiz"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                    >
+                        Quiz
+                    </button>
+
+                    <button
+                        class="result-tab"
+                        data-tab="flashcards"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                    >
+                        Flashcards
+                    </button>
+
+                </div>
+
+                <div
+                    id="resultContent"
+                    class="result-content"
+                    aria-live="polite"
+                >
+                    <div class="empty-state">
+                        <span class="empty-icon">✳</span>
+
+                        <h3>Your next breakthrough starts here.</h3>
+
+                        <p>
+                            Add your study material above and select
+                            Generate to create your learning kit.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="features section-padding" id="features">
+
+        <div class="section-label">04 / WHAT YOU CAN DO</div>
+
+        <div class="features-heading">
+            <h2>
+                One topic.<br>
+                <em>Many ways to learn.</em>
+            </h2>
+
+            <p>
+                Study in a way that works for you.
+                Build understanding one concept at a time.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+
+            <article class="feature-card liquid-glass">
+                <div class="feature-number">01</div>
+                <div class="feature-icon">↗</div>
+
+                <h3>Smart summaries</h3>
+
+                <p>
+                    Break lengthy study material into shorter,
+                    more manageable explanations.
+                </p>
+            </article>
+
+            <article class="feature-card liquid-glass">
+                <div class="feature-number">02</div>
+                <div class="feature-icon">✳</div>
+
+                <h3>Practice quizzes</h3>
+
+                <p>
+                    Test your understanding with questions based
+                    on the material you're studying.
+                </p>
+            </article>
+
+            <article class="feature-card liquid-glass">
+                <div class="feature-number">03</div>
+                <div class="feature-icon">◇</div>
+
+                <h3>Flashcards</h3>
+
+                <p>
+                    Review important terms and concepts with
+                    question-and-answer cards.
+                </p>
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- FINAL CTA -->
+
+    <section class="final-cta section-padding">
+
+        <div class="section-label">05 / YOUR NEXT CHAPTER</div>
+
+        <h2>
+            Make learning<br>
+            <em>feel different.</em>
+        </h2>
+
+        <a href="#workspace" class="hero-button">
+            Build your learning kit <span>↗</span>
+        </a>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <a href="index.html" class="brand">
+            <span class="brand-icon">S</span>
+            <span>SmackLearn</span>
+        </a>
+
+        <p>Built for curious minds.</p>
+
+        <a href="#home" class="back-to-top">BACK TO TOP ↑</a>
+
+    </footer>
+
+</body>
+</html>

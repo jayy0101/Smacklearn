@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="SmackLearn helps students turn study notes into summaries, quizzes and flashcards.">
+
+    <title>SmackLearn — Learn Smarter</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/app.js" defer></script>
+</head>
+
+<body>
+<div class="video-background">
+    <video
+        id="backgroundVideo"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        aria-hidden="true"
+    >
+        <source
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_115001_bcdaa3b4-03de-47e7-ad63-ae3e392c32d4.mp4"
+            type="video/mp4"
+        >
+    </video>
+</div>
+    <!-- Navigation -->
+    <header class="navbar">
+
+        <a href="#" class="logo">
+            <span class="logo-icon">S</span>
+            <span>SmackLearn<span class="logo-dot">.</span></span>
+        </a>
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#workspace" class="active">Workspace</a>
+            <a href="#features">Features</a>
+            <button id="settingsBtn" class="nav-button">Settings</button>
+        </nav>
+
+        <div class="nav-actions">
+
+            <button id="themeToggle"
+                    class="icon-button"
+                    aria-label="Switch color theme"
+                    title="Switch theme">
+                ☾
+            </button>
+
+            <button id="menuToggle"
+                    class="icon-button menu-toggle"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false">
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- Hero Section -->
+        <section class="hero">
+
+            <div class="hero-badge">
+                <span class="status-dot"></span>
+                YOUR PERSONAL AI STUDY SPACE
+            </div>
+
+            <h1>
+                Study smarter.<br>
+                <span class="gradient-text">Remember more.</span>
+            </h1>
+
+            <p class="hero-description">
+                Turn your class notes into clear summaries,
+                interactive quizzes and smart flashcards.
+                Spend less time organizing and more time learning.
+            </p>
+
+           <a href="learning.html" class="primary-button hero-button">
+    Start learning <span aria-hidden="true">→</span>
+</a>
+
+
+            <div class="hero-stats">
+
+                <div>
+                    <strong>01</strong>
+                    <span>Paste your notes</span>
+                </div>
+
+                <span class="stat-divider"></span>
+
+                <div>
+                    <strong>02</strong>
+                    <span>Generate study material</span>
+                </div>
+
+                <span class="stat-divider"></span>
+
+                <div>
+                    <strong>03</strong>
+                    <span>Learn your way</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Study Workspace -->
+        <section class="workspace section-container" id="workspace">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">YOUR WORKSPACE</span>
+
+                    <h2>What are we learning today?</h2>
+
+                    <p>
+                        Start with your notes or enter a topic
+                        you want to understand.
+                    </p>
+                </div>
+
+                <span class="workspace-label">
+                    <span class="status-dot"></span>
+                    Study workspace
+                </span>
+
+            </div>
+
+
+            <div class="workspace-grid">
+
+                <!-- Notes Panel -->
+                <article class="panel notes-panel">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon">✎</div>
+
+                        <div>
+                            <h3>Your study notes</h3>
+                            <p>Paste notes or enter a topic below.</p>
+                        </div>
+
+                    </div>
+
+                    <label for="notesInput" class="input-label">
+                        Notes or topic
+                    </label>
+
+                    <textarea
+                        id="notesInput"
+                        maxlength="12000"
+                        placeholder="Paste your class notes here...
+
+Example: Photosynthesis is the process by which green plants convert light energy into chemical energy...">
+                    </textarea>
+
+                    <div class="input-footer">
+
+                        <span id="charCount">
+                            0 / 12,000 characters
+                        </span>
+
+                        <button id="clearNotes" class="text-button">
+                            Clear notes
+                        </button>
+
+                    </div>
+
+
+                    <div class="generate-settings">
+
+                        <div class="select-wrapper">
+
+                            <label for="studyStyle">
+                                Explanation style
+                            </label>
+
+                            <select id="studyStyle">
+                                <option value="exam">Exam-focused</option>
+                                <option value="simple">Explain like I'm 10</option>
+                                <option value="detailed">Detailed</option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="select-wrapper">
+
+                            <label for="difficulty">
+                                Quiz difficulty
+                            </label>
+
+                            <select id="difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <button id="generateBtn"
+                            class="primary-button generate-button">
+
+                        <span aria-hidden="true">✦</span>
+                        Generate study material
+                        <span aria-hidden="true">→</span>
+
+                    </button>
+
+                    <p class="privacy-note">
+                        Your study session starts with the notes you provide.
+                    </p>
+
+                    <p id="statusMessage"
+                       class="status-message"
+                       role="status"
+                       aria-live="polite">
+                    </p>
+
+                </article>
+
+
+                <!-- Output Panel -->
+                <aside class="panel output-panel">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon">✧</div>
+
+                        <div>
+                            <h3>Your study material</h3>
+                            <p>Your generated content will appear here.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="output-tabs" role="tablist"
+                         aria-label="Study material types">
+
+                        <button class="output-tab active"
+                                data-tab="summary"
+                                role="tab"
+                                aria-selected="true">
+                            Summary
+                        </button>
+
+                        <button class="output-tab"
+                                data-tab="quiz"
+                                role="tab"
+                                aria-selected="false">
+                            Quiz
+                        </button>
+
+                        <button class="output-tab"
+                                data-tab="flashcards"
+                                role="tab"
+                                aria-selected="false">
+                            Flashcards
+                        </button>
+
+                    </div>
+
+
+                    <div id="outputContent" class="output-content">
+
+                        <div class="empty-state">
+
+                            <div class="empty-icon">✧</div>
+
+                            <h3>Your learning journey starts here</h3>
+
+                            <p>
+                                Add your notes and generate your first
+                                study material to see your results here.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+
+        <!-- Features Section -->
+        <section class="features-section section-container"
+                 id="features">
+
+            <div class="section-heading centered-heading">
+
+                <span class="eyebrow">
+                    BUILT FOR BETTER LEARNING
+                </span>
+
+                <h2>Everything you need to study smarter.</h2>
+
+                <p>
+                    One set of notes. Three powerful ways to learn.
+                </p>
+
+            </div>
+
+
+            <div class="features-grid">
+
+                <article class="feature-card">
+
+                    <div class="feature-icon summary-icon">▤</div>
+
+                    <h3>Smart summaries</h3>
+
+                    <p>
+                        Break down lengthy notes into concise,
+                        understandable explanations.
+                    </p>
+
+                    <span class="feature-tag">
+                        Understand faster
+                    </span>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="feature-icon quiz-icon">✓</div>
+
+                    <h3>Interactive quizzes</h3>
+
+                    <p>
+                        Test your understanding with multiple-choice
+                        questions and instant feedback.
+                    </p>
+
+                    <span class="feature-tag">
+                        Practice actively
+                    </span>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="feature-icon flashcard-icon">▣</div>
+
+                    <h3>Smart flashcards</h3>
+
+                    <p>
+                        Review important concepts with question-and-answer
+                        cards designed for revision.
+                    </p>
+
+                    <span class="feature-tag">
+                        Remember longer
+                    </span>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Settings Section -->
+        <section class="settings-section section-container"
+                 id="settingsPanel"
+                 hidden>
+
+            <div class="panel settings-panel">
+
+                <div class="panel-heading">
+
+                    <div class="panel-icon">⚙</div>
+
+                    <div>
+                        <h3>AI settings</h3>
+                        <p>Configure your AI preferences.</p>
+                    </div>
+
+                </div>
+
+
+                <label for="apiKeyInput" class="input-label">
+                    AI API key
+                </label>
+
+                <div class="api-key-row">
+
+                    <input
+                        type="password"
+                        id="apiKeyInput"
+                        placeholder="API integration will be added later"
+                        autocomplete="off"
+                        disabled>
+
+                    <button id="showKeyBtn"
+                            class="secondary-button"
+                            disabled>
+                        Show
+                    </button>
+
+                </div>
+
+                <p class="settings-help">
+                    AI integration will be implemented later.
+                    Never publish private API keys in frontend code.
+                </p>
+
+                <p id="settingsMessage"
+                   class="status-message"
+                   role="status"
+                   aria-live="polite">
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <a href="#" class="logo footer-logo">
+            <span class="logo-icon">S</span>
+            <span>SmackLearn<span class="logo-dot">.</span></span>
+        </a>
+
+        <p>Made for curious minds. Built for better learning.</p>
+
+        <span class="copyright">
+            © <span id="currentYear"></span> SmackLearn
+        </span>
+
+    </footer>
+
+</body>
+
+</html>

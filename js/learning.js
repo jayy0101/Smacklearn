@@ -11,9 +11,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearButton = document.getElementById("clearNotes");
     const generateButton = document.getElementById("generateButton");
     const outputType = document.getElementById("outputType");
+    const aiProvider = document.getElementById("aiProvider");
     const resultsStatus = document.getElementById("resultsStatus");
     const resultContent = document.getElementById("resultContent");
     const resultTabs = document.querySelectorAll(".result-tab");
+    // ==========================================
+// WEAK-SPOT TRACKING ELEMENTS
+// ==========================================
+
+const weakSpotsCount = document.getElementById("weakSpotsCount");
+const totalQuestionsAnswered = document.getElementById("totalQuestionsAnswered");
+const overallAccuracy = document.getElementById("overallAccuracy");
+const topWeakTopic = document.getElementById("topWeakTopic");
+const topicChart = document.getElementById("topicChart");
+const weakTopicsList = document.getElementById("weakTopicsList");
+const practiceWeakTopics = document.getElementById("practiceWeakTopics");
+
+const QUIZ_HISTORY_KEY = "smacklearn_quiz_history_v1";
+
+let quizHistory = loadQuizHistory();
+let practiceMode = false;
+
+function loadQuizHistory() {
+    try {
+        const saved = localStorage.getItem(QUIZ_HISTORY_KEY);
+        const parsed = saved ? JSON.parse(saved) : [];
+
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        console.error("Could not load quiz history:", error);
+        return [];
+    }
+}
+
+function saveQuizHistory() {
+    try {
+        localStorage.setItem(
+            QUIZ_HISTORY_KEY,
+            JSON.stringify(quizHistory)
+        );
+    } catch (error) {
+        console.error("Could not save quiz history:", error);
+    }
+}
 
     let activeTab = "summary";
     let generatedMaterials = null;
@@ -137,6 +177,332 @@ document.addEventListener("DOMContentLoaded", () => {
             return entities[character];
         });
     }
+    // ==========================================
+// WEAK-SPOT TOPIC DETECTION
+// ==========================================
+
+function detectQuizTopic(item) {
+    const text = [
+        item.topic || "",
+        item.term || "",
+        item.question || "",
+        item.explanation || ""
+    ].join(" ").toLowerCase();
+
+    const topicRules = [
+        {
+            name: "SQL Joins",
+            keywords: ["sql join", "inner join", "left join", "right join",
+                "full join", "cross join"]
+        },
+        {
+            name: "SQL",
+            keywords: ["sql", "database", "select query", "primary key",
+                "foreign key", "normalization", "dbms"]
+        },
+        {
+            name: "Python",
+            keywords: ["python", "list comprehension", "dictionary",
+                "tuple", "python function"]
+        },
+        {
+            name: "Java",
+            keywords: ["java", "inheritance", "polymorphism",
+                "constructor", "encapsulation", "interface"]
+        },
+        {
+            name: "HTML & CSS",
+            keywords: ["html", "css", "stylesheet", "web page",
+                "markup language"]
+        },
+        {
+            name: "JavaScript",
+            keywords: ["javascript", "dom", "event listener",
+                "async", "promise"]
+        },
+        {
+            name: "Mathematics",
+            keywords: ["equation", "function", "matrix", "probability",
+                "derivative", "integral"]
+        },
+        {
+            name: "Artificial Intelligence",
+            keywords: ["artificial intelligence", "machine learning",
+                "neural network", "deep learning", "llm"]
+        }
+    ];
+
+    for (const rule of topicRules) {
+        if (rule.keywords.some(keyword => text.includes(keyword))) {
+            return rule.name;
+        }
+    }
+
+    // Use the term when available, otherwise use a general category.
+    if (item.term) {
+        return String(item.term).trim().slice(0, 60);
+    }
+
+    return "General Concepts";
+}
+
+// ==========================================
+// RECORD QUIZ ANSWERS
+// ==========================================
+
+function recordQuizAttempt(item, selectedAnswer, isCorrect) {
+    quizHistory.push({
+        topic: detectQuizTopic(item),
+        question: String(item.question || ""),
+        options: Array.isArray(item.options) ? [...item.options] : [],
+        answer: String(item.answer || ""),
+        explanation: String(item.explanation || ""),
+        selectedAnswer: selectedAnswer === null
+            ? null
+            : String(selectedAnswer),
+        isCorrect,
+        timestamp: new Date().toISOString()
+    });
+
+    saveQuizHistory();
+    updateWeakSpotsDashboard();
+}
+
+// ==========================================
+// CALCULATE TOPIC PERFORMANCE
+// ==========================================
+
+function getTopicStatistics() {
+    const topics = {};
+
+    quizHistory.forEach(attempt => {
+        const topic = attempt.topic || "General Concepts";
+
+        if (!topics[topic]) {
+            topics[topic] = {
+                total: 0,
+                correct: 0,
+                wrong: 0
+            };
+        }
+
+        topics[topic].total++;
+
+        if (attempt.isCorrect) {
+            topics[topic].correct++;
+        } else {
+            topics[topic].wrong++;
+        }
+    });
+
+    return Object.entries(topics)
+        .map(([name, stats]) => ({
+            name,
+            ...stats,
+            accuracy: Math.round(
+                (stats.correct / stats.total) * 100
+            )
+        }))
+        .sort((a, b) => a.accuracy - b.accuracy);
+}
+// ==========================================
+// GENERATE A QUIZ FROM WEAK TOPICS
+// ==========================================
+
+function generateWeakTopicQuiz() {
+    const topicStatistics = getTopicStatistics();
+
+    const weakTopicNames = new Set(
+        topicStatistics
+            .filter(topic => topic.accuracy < 70)
+            .map(topic => topic.name)
+    );
+
+    // Find previously incorrect questions from weak topics.
+    const incorrectQuestions = quizHistory.filter(attempt =>
+        !attempt.isCorrect &&
+        weakTopicNames.has(attempt.topic) &&
+        Array.isArray(attempt.options) &&
+        attempt.options.length >= 2 &&
+        attempt.options.includes(attempt.answer)
+    );
+
+    // Keep the most recent incorrect questions.
+    const uniqueQuestions = [];
+    const seenQuestions = new Set();
+
+    incorrectQuestions
+        .slice()
+        .reverse()
+        .forEach(attempt => {
+            const key = `${attempt.topic}::${attempt.question}`;
+
+            if (seenQuestions.has(key)) return;
+
+            seenQuestions.add(key);
+            uniqueQuestions.push(attempt);
+        });
+
+    if (!uniqueQuestions.length) {
+        return [];
+    }
+
+    return shuffleArray(uniqueQuestions)
+        .slice(0, 10)
+        .map((attempt, index) => ({
+            number: index + 1,
+            topic: attempt.topic,
+            term: attempt.topic,
+            question: attempt.question,
+            options: shuffleArray(attempt.options),
+            answer: attempt.answer,
+            explanation: attempt.explanation ||
+                `Review the concept: ${attempt.topic}.`
+        }));
+}
+
+// ==========================================
+// START WEAK-TOPIC PRACTICE
+// ==========================================
+
+if (practiceWeakTopics) {
+    practiceWeakTopics.addEventListener("click", () => {
+        const questions = generateWeakTopicQuiz();
+
+        if (!questions.length) {
+            alert(
+                "There are no saved incorrect questions for your weak topics yet. " +
+                "Complete another quiz and try again."
+            );
+            return;
+        }
+
+        generatedMaterials = {
+            summary: [],
+            quiz: questions,
+            flashcards: []
+        };
+
+        practiceMode = true;
+        activeTab = "quiz";
+
+        renderActiveTab();
+
+        if (resultsStatus) {
+            resultsStatus.textContent =
+                "WEAK-TOPIC PRACTICE READY";
+        }
+
+        const resultsSection =
+            document.getElementById("resultsSection");
+
+        if (resultsSection) {
+            resultsSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    });
+}
+
+// ==========================================
+// UPDATE DASHBOARD
+// ==========================================
+
+function updateWeakSpotsDashboard() {
+    if (
+        !totalQuestionsAnswered ||
+        !overallAccuracy ||
+        !topWeakTopic ||
+        !topicChart ||
+        !weakTopicsList
+    ) {
+        return;
+    }
+
+    const total = quizHistory.length;
+    const correct = quizHistory.filter(item => item.isCorrect).length;
+    const accuracy = total
+        ? Math.round((correct / total) * 100)
+        : 0;
+
+    const statistics = getTopicStatistics();
+
+    // A topic is weak when its accuracy is below 70%.
+    const weakTopics = statistics.filter(topic =>
+        topic.accuracy < 70
+    );
+
+    totalQuestionsAnswered.textContent = total;
+    overallAccuracy.textContent = total ? `${accuracy}%` : "—";
+    topWeakTopic.textContent = weakTopics.length
+        ? weakTopics[0].name
+        : (total ? "None identified" : "—");
+
+    if (weakSpotsCount) {
+        weakSpotsCount.textContent =
+            `${weakTopics.length} weak topic${weakTopics.length === 1 ? "" : "s"}`;
+    }
+
+    if (!statistics.length) {
+        topicChart.innerHTML = `
+            <div class="weak-spots-empty">
+                Complete a quiz to see your topic performance here.
+            </div>
+        `;
+
+        weakTopicsList.innerHTML = `
+            <div class="weak-spots-empty">
+                Your weak topics will appear here after you answer quiz questions.
+            </div>
+        `;
+    } else {
+        topicChart.innerHTML = statistics.map(topic => `
+            <div class="topic-chart-row">
+                <span class="topic-chart-label">
+                    ${escapeHTML(topic.name)}
+                </span>
+
+                <div class="topic-chart-track">
+                    <div
+                        class="topic-chart-fill"
+                        style="width: ${topic.accuracy}%"
+                    ></div>
+                </div>
+
+                <span class="topic-chart-value">
+                    ${topic.accuracy}%
+                </span>
+            </div>
+        `).join("");
+
+        weakTopicsList.innerHTML = weakTopics.length
+            ? weakTopics.map(topic => `
+                <div class="weak-topic-item">
+                    <div>
+                        <strong>${escapeHTML(topic.name)}</strong>
+                        <small>
+                            ${topic.correct} correct out of ${topic.total}
+                            answered
+                        </small>
+                    </div>
+
+                    <span class="weak-topic-accuracy">
+                        ${topic.accuracy}% accuracy
+                    </span>
+                </div>
+            `).join("")
+            : `
+                <div class="weak-spots-empty">
+                    Great progress! No topics currently fall below 70% accuracy.
+                </div>
+            `;
+    }
+
+    if (practiceWeakTopics) {
+        practiceWeakTopics.disabled = weakTopics.length === 0;
+    }
+}
 
     // ==========================================
     // 6. CLEAN AND PROCESS NOTES
@@ -437,7 +803,50 @@ document.addEventListener("DOMContentLoaded", () => {
                 answer: line
             }));
     }
+// ==========================================
+// AI STUDY KIT API
+// ==========================================
 
+async function generateAIStudyKit(notes, provider, difficulty, style) {
+    const response = await fetch("http://localhost:3000/api/study-kit", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            notes,
+            provider,
+            difficulty,
+            style
+        })
+    });
+
+    let data;
+
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error("The backend returned an invalid response.");
+    }
+
+    if (!response.ok) {
+        const details = Array.isArray(data.details)
+            ? data.details.join("; ")
+            : "";
+
+        throw new Error(
+            [data.error || "Study kit generation failed.", details]
+                .filter(Boolean)
+                .join(" ")
+        );
+    }
+
+    if (!data.materials) {
+        throw new Error("The backend returned no study materials.");
+    }
+
+    return data.materials;
+}
     // ==========================================
     // 11. CREATE STUDY MATERIALS
     // ==========================================
@@ -653,162 +1062,270 @@ document.addEventListener("DOMContentLoaded", () => {
             renderActiveTab();
         });
     });
+// ==========================================
+// 17. CHECK QUIZ ANSWERS + TRACK WEAK SPOTS
+// ==========================================
 
-    // ==========================================
-    // 17. CHECK QUIZ ANSWERS
-    // ==========================================
+if (resultContent) {
+    resultContent.addEventListener("submit", event => {
+        if (event.target.id !== "quizForm") return;
 
-    if (resultContent) {
-        resultContent.addEventListener("submit", event => {
-            if (event.target.id !== "quizForm") return;
+        event.preventDefault();
 
-            event.preventDefault();
+        if (!generatedMaterials) return;
 
-            if (!generatedMaterials) return;
+        let score = 0;
+        let unanswered = 0;
 
-            let score = 0;
-            let unanswered = 0;
+        generatedMaterials.quiz.forEach((item, index) => {
+            const selected = resultContent.querySelector(
+                `input[name="question-${index}"]:checked`
+            );
 
-            generatedMaterials.quiz.forEach((item, index) => {
-                const selected = resultContent.querySelector(
-                    `input[name="question-${index}"]:checked`
-                );
+            const feedback = resultContent.querySelector(
+                `#feedback-${index}`
+            );
 
-                const feedback = resultContent.querySelector(
-                    `#feedback-${index}`
-                );
+            if (!selected) {
+                unanswered++;
 
-                if (!selected) {
-                    unanswered++;
-
-                    if (feedback) {
-                        feedback.textContent = "Choose an answer first.";
-                    }
-
-                    return;
+                if (feedback) {
+                    feedback.textContent = "Choose an answer first.";
                 }
-
-                const selectedIndex = Number(selected.value);
-                const selectedAnswer = item.options[selectedIndex];
-
-                if (
-                    selectedAnswer &&
-                    selectedAnswer.toLowerCase() ===
-                    item.answer.toLowerCase()
-                ) {
-                    score++;
-
-                    if (feedback) {
-                        feedback.textContent =
-                            `Correct! ${item.explanation}`;
-                    }
-                } else if (feedback) {
-                    feedback.textContent =
-                        `Not quite. The correct answer is: ${item.answer}.`;
-                }
-            });
-
-            const scoreElement =
-                resultContent.querySelector("#quizScore");
-
-            if (scoreElement) {
-                scoreElement.textContent =
-                    `Your score: ${score}/${generatedMaterials.quiz.length}` +
-                    (unanswered ? ` · ${unanswered} unanswered` : "");
-            }
-        });
-    }
-
-    // ==========================================
-    // 18. GENERATE STUDY KIT
-    // ==========================================
-
-    if (generateButton) {
-        generateButton.addEventListener("click", event => {
-            event.preventDefault();
-
-            const text = notesInput
-                ? notesInput.value.trim()
-                : "";
-
-            if (!text) {
-                if (resultsStatus) {
-                    resultsStatus.textContent =
-                        "ADD YOUR STUDY MATERIAL";
-                }
-
-                if (notesInput) notesInput.focus();
 
                 return;
             }
 
-            generateButton.disabled = true;
+            const selectedIndex = Number(selected.value);
+            const selectedAnswer = item.options[selectedIndex];
 
-            const buttonText =
-                generateButton.querySelector("span");
+            const isCorrect = Boolean(
+                selectedAnswer &&
+                selectedAnswer.toLowerCase() ===
+                item.answer.toLowerCase()
+            );
 
-            if (buttonText) {
-                buttonText.textContent = "Preparing materials...";
+            if (isCorrect) {
+                score++;
+
+                if (feedback) {
+                    feedback.textContent =
+                        `Correct! ${item.explanation || ""}`;
+                }
+            } else if (feedback) {
+                feedback.textContent =
+                    `Not quite. The correct answer is: ${item.answer}.`;
             }
+
+            // Record each answered question only once per submission.
+            if (!event.target.dataset.submitted) {
+                recordQuizAttempt(item, selectedAnswer, isCorrect);
+            }
+        });
+
+        // Prevent duplicate history entries if the same quiz is submitted again.
+        event.target.dataset.submitted = "true";
+
+        const scoreElement =
+            resultContent.querySelector("#quizScore");
+
+        if (scoreElement) {
+            scoreElement.textContent =
+                `Your score: ${score}/${generatedMaterials.quiz.length}` +
+                (unanswered ? ` · ${unanswered} unanswered` : "");
+        }
+
+        // Lock the submitted quiz to prevent accidental repeat submissions.
+        event.target.querySelectorAll(
+            'input[type="radio"], button[type="submit"]'
+        ).forEach(element => {
+            element.disabled = true;
+        });
+    });
+}
+
+    // ==========================================
+// 18. GENERATE STUDY KIT
+// ==========================================
+
+if (generateButton) {
+    generateButton.addEventListener("click", async event => {
+        event.preventDefault();
+
+        const text = notesInput
+            ? notesInput.value.trim()
+            : "";
+
+        if (!text) {
+            if (resultsStatus) {
+                resultsStatus.textContent =
+                    "ADD YOUR STUDY MATERIAL";
+            }
+
+            if (notesInput) {
+                notesInput.focus();
+            }
+
+            return;
+        }
+
+        if (text.length > 12000) {
+            if (resultsStatus) {
+                resultsStatus.textContent =
+                    "NOTES MUST BE 12000 CHARACTERS OR FEWER";
+            }
+
+            return;
+        }
+
+        const selectedProvider = aiProvider
+            ? aiProvider.value
+            : "local";
+
+        const selectedStyle =
+            document.getElementById("studyStyle")?.value || "standard";
+
+        const selectedDifficulty =
+            document.getElementById("quizDifficulty")?.value || "medium";
+
+        const requestedType = outputType
+            ? outputType.value
+            : "all";
+
+        const buttonText = generateButton.querySelector("span");
+
+        generateButton.disabled = true;
+
+        if (buttonText) {
+            buttonText.textContent = "Generating...";
+        }
+
+        if (resultsStatus) {
+            resultsStatus.textContent =
+                selectedProvider === "local"
+                    ? "CREATING MATERIALS LOCALLY"
+                    : "AI IS GENERATING YOUR STUDY KIT";
+        }
+
+        try {
+            let materials;
+
+            if (selectedProvider === "local") {
+                // Preserve the existing local generator.
+                materials = createMaterials(text);
+            } else {
+                // Request AI-generated materials from the backend.
+                const aiMaterials = await generateAIStudyKit(
+                    text,
+                    selectedProvider,
+                    selectedDifficulty,
+                    selectedStyle
+                );
+
+                // Convert the AI response into the structure
+                // expected by the existing rendering functions.
+                materials = {
+                    summary: aiMaterials.summary.map(item =>
+                        String(item)
+                    ),
+
+                    quiz: aiMaterials.quiz.map((item, index) => ({
+                        number: index + 1,
+                        term: item.question,
+                        question: item.question,
+                        options: shuffleArray([...item.options]),
+                        answer: item.answer,
+                        explanation: item.explanation || ""
+                    })),
+
+                    flashcards: aiMaterials.flashcards.map(
+                        (item, index) => ({
+                            number: index + 1,
+                            question: item.question,
+                            answer: item.answer
+                        })
+                    )
+                };
+            }
+
+            generatedMaterials = materials;
+
+            // Support Summary, Quiz, Flashcards, and Everything.
+            activeTab = [
+                "summary",
+                "quiz",
+                "flashcards"
+            ].includes(requestedType)
+                ? requestedType
+                : "summary";
+
+            renderActiveTab();
 
             if (resultsStatus) {
                 resultsStatus.textContent =
-                    "CREATING YOUR STUDY KIT";
+                    selectedProvider === "local"
+                        ? "LOCAL STUDY KIT READY"
+                        : `AI STUDY KIT READY (${selectedProvider.toUpperCase()})`;
             }
 
-            setTimeout(() => {
-                try {
-                    generatedMaterials = createMaterials(text);
+            const resultsSection =
+                document.getElementById("resultsSection");
 
-                    const requestedType = outputType
-                        ? outputType.value
-                        : "all";
+            if (resultsSection) {
+                resultsSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
 
-                    activeTab = [
-                        "summary",
-                        "quiz",
-                        "flashcards"
-                    ].includes(requestedType)
-                        ? requestedType
-                        : "summary";
+        } catch (error) {
+            console.error("Study Kit generation error:", error);
 
-                    renderActiveTab();
+            if (resultsStatus) {
+                resultsStatus.textContent = "GENERATION FAILED";
+            }
 
-                    if (resultsStatus) {
-                        resultsStatus.textContent =
-                            "YOUR STUDY KIT IS READY";
-                    }
+            if (resultContent) {
+                resultContent.innerHTML = `
+                    <div class="error-message">
+                        <h3>Couldn't generate your study kit</h3>
 
-                    const resultsSection =
-                        document.getElementById("resultsSection");
+                        <p>${escapeHTML(error.message)}</p>
 
-                    if (resultsSection) {
-                        resultsSection.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start"
-                        });
-                    }
-                } catch (error) {
-                    console.error(
-                        "SmackLearn generation error:",
-                        error
-                    );
+                        <p>
+                            Check that the backend is running and that
+                            your selected AI provider is configured.
+                        </p>
 
-                    if (resultsStatus) {
-                        resultsStatus.textContent =
-                            "GENERATION FAILED — CHECK THE CONSOLE";
-                    }
-                } finally {
-                    generateButton.disabled = false;
+                        <button
+                            type="button"
+                            class="primary-button"
+                            id="retryGeneration"
+                        >
+                            Try again
+                        </button>
+                    </div>
+                `;
 
-                    if (buttonText) {
-                        buttonText.textContent =
-                            "Generate study materials";
-                    }
+                const retryButton =
+                    document.getElementById("retryGeneration");
+
+                if (retryButton) {
+                    retryButton.addEventListener("click", () => {
+                        generateButton.click();
+                    });
                 }
-            }, 200);
-        });
-    }
+            }
+
+        } finally {
+            generateButton.disabled = false;
+
+            if (buttonText) {
+                buttonText.textContent = "Generate study materials";
+            }
+        }
+    });
+}
 
     // ==========================================
     // 19. SCROLL REVEAL ANIMATIONS
@@ -835,6 +1352,6 @@ document.addEventListener("DOMContentLoaded", () => {
             observer.observe(element);
         });
     }
-
+updateWeakSpotsDashboard(); 
     console.log("SmackLearn initialized successfully.");
 });

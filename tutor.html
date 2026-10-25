@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ask questions and learn programming, college subjects, and AI concepts with SmackLearn AI Tutor.">
+    <title>AI Tutor — SmackLearn</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tutor.css">
+    <script src="js/tutor.js" defer></script>
+</head>
+<body class="tutor-page">
+<header class="navbar">
+    <a href="index.html" class="logo">
+        <span class="logo-icon">S</span>
+        <span>SmackLearn<span class="logo-dot">.</span></span>
+    </a>
+
+    <nav class="nav-links">
+        <a href="index.html#workspace">Workspace</a>
+        <a href="learning.html">Study Tools</a>
+        <a href="tutor.html" class="active">AI Tutor</a>
+    </nav>
+
+    <div class="nav-actions">
+        <button id="themeToggle" class="icon-button" aria-label="Switch color theme">☾</button>
+    </div>
+</header>
+
+<main class="tutor-layout">
+
+    <section class="tutor-heading">
+        <span class="hero-badge">
+            <span class="status-dot"></span>
+            YOUR PERSONAL LEARNING ASSISTANT
+        </span>
+
+        <h1>Ask anything.<br><span class="gradient-text">Understand everything.</span></h1>
+
+        <p>Get simple explanations, examples, and coding help for your studies.</p>
+    </section>
+
+    <section class="chat-panel" aria-label="AI Tutor chat">
+
+        <div class="chat-toolbar">
+            <div>
+                <h2>✦ SmackLearn Tutor</h2>
+                <p id="connectionStatus" role="status">Checking connection...</p>
+            </div>
+
+            <div class="provider-control">
+                <label for="providerSelect">AI Provider</label>
+                <select id="providerSelect">
+                    <option value="auto">Auto (Gemini → Groq)</option>
+                    <option value="gemini">Gemini</option>
+                    <option value="groq">Groq</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="suggestions" id="suggestions">
+            <button type="button" class="suggestion" data-question="Explain inheritance in Java with a short example.">Java inheritance</button>
+            <button type="button" class="suggestion" data-question="Explain pointers in C++ with a simple example.">C++ pointers</button>
+            <button type="button" class="suggestion" data-question="Explain SQL joins with examples.">SQL joins</button>
+            <button type="button" class="suggestion" data-question="Explain machine learning to a beginner.">Machine learning</button>
+        </div>
+
+        <div id="chatMessages" class="chat-messages" aria-live="polite">
+            <article class="message assistant-message">
+                <div class="message-avatar">S</div>
+                <div class="message-content">
+                    <strong>SmackLearn Tutor</strong>
+                    <p>Hi! I'm your AI study assistant. Ask me about Java, C++, Python, SQL, mathematics, or AI. I'll explain concepts step by step.</p>
+                </div>
+            </article>
+        </div>
+
+        <form id="chatForm" class="chat-form">
+            <label for="questionInput" class="sr-only">Your question</label>
+            <textarea
+                id="questionInput"
+                maxlength="4000"
+                rows="2"
+                placeholder="Ask your question..."
+                required></textarea>
+            <div class="composer-footer">
+                <span>Press Enter to send · Shift + Enter for a new line</span>
+                <button type="submit" id="sendButton" class="primary-button">
+                    Send <span aria-hidden="true">→</span>
+                </button>
+            </div>
+        </form>
+
+        <p class="tutor-disclaimer">AI responses can contain mistakes. Verify important information with your course material.</p>
+    </section>
+
+    <a href="learning.html" class="back-link">← Back to Study Tools</a>
+
+</main>
+
+<footer class="footer">
+    <a href="index.html" class="logo footer-logo">
+        <span class="logo-icon">S</span>
+        <span>SmackLearn<span class="logo-dot">.</span></span>
+    </a>
+    <p>Made for curious minds. Built for better learning.</p>
+    <span class="copyright">© <span id="currentYear"></span> SmackLearn</span>
+</footer>
+</body>
+</html>

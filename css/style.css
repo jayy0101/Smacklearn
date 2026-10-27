@@ -755,8 +755,12 @@ body.light-theme .navbar {
     );
 
     -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
 
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -1849,4 +1853,40 @@ body {
 
 .footer {
     background: rgba(8, 11, 18, 0.45);
+}
+/* Notes-to-Exam feature */
+.notes-exam-card {
+    position: relative;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.notes-exam-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(190, 255, 90, 0.45);
+}
+
+.notes-exam-icon {
+    color: #c4ff65;
+}
+
+.notes-exam-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 16px;
+    color: #c4ff65;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.notes-exam-link:hover {
+    gap: 13px;
+}
+
+.notes-exam-link span {
+    transition: transform 0.2s ease;
+}
+
+.notes-exam-link:hover span {
+    transform: translateX(3px);
 }

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes to Exam | SmackLearn</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/notes-exam.css">
+</head>
+<body>
+
+    <header class="ne-header">
+        <a href="index.html" class="ne-logo">SmackLearn<span>.</span></a>
+        <a href="learning.html" class="ne-back">← Back to Learning</a>
+    </header>
+
+    <main class="ne-container">
+        <section class="ne-hero">
+            <span class="ne-badge">AI-POWERED EXAM PREPARATION</span>
+            <h1>Turn your notes into an <span>exam.</span></h1>
+            <p>Upload your study material, generate questions, take a timed test, and discover what you've mastered.</p>
+        </section>
+
+        <section class="ne-card" id="uploadSection">
+            <div class="ne-section-heading">
+                <div>
+                    <span class="ne-step">STEP 01</span>
+                    <h2>Upload your notes</h2>
+                    <p>Start with your lecture notes or study material.</p>
+                </div>
+            </div>
+
+            <form id="notesExamForm">
+                <label for="notesFile" class="ne-upload-area" id="uploadArea">
+                    <span class="ne-upload-icon">↑</span>
+                    <strong>Choose a file or drag it here</strong>
+                    <span>PDF, TXT or DOCX · Maximum 5 MB</span>
+                    <input
+                        type="file"
+                        id="notesFile"
+                        name="notesFile"
+                        accept=".pdf,.txt,.docx"
+                        hidden
+                    >
+                </label>
+
+                <div id="fileInfo" class="ne-file-info" hidden></div>
+
+                <div class="ne-settings">
+                    <div class="ne-field">
+                        <label for="questionCount">Number of questions</label>
+                        <select id="questionCount">
+                            <option value="10">10 questions</option>
+                            <option value="15" selected>15 questions</option>
+                            <option value="20">20 questions</option>
+                        </select>
+                    </div>
+
+                    <div class="ne-field">
+                        <label for="examDifficulty">Difficulty</label>
+                        <select id="examDifficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+
+                    <div class="ne-field">
+                        <label for="examDuration">Time limit</label>
+                        <select id="examDuration">
+                            <option value="10">10 minutes</option>
+                            <option value="20" selected>20 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="45">45 minutes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="generateExamBtn" class="ne-primary-btn">
+                    Generate My Exam →
+                </button>
+
+                <p id="uploadStatus" class="ne-status" role="status"></p>
+            </form>
+        </section>
+
+        <section class="ne-card ne-exam-section" id="examSection" hidden>
+            <div class="ne-exam-top">
+                <div>
+                    <span class="ne-step">STEP 02</span>
+                    <h2>Your exam</h2>
+                    <p id="examProgress">Question 1</p>
+                </div>
+                <div class="ne-timer" id="examTimer" role="timer">20:00</div>
+            </div>
+
+            <div class="ne-progress-track">
+                <div class="ne-progress-fill" id="examProgressFill"></div>
+            </div>
+
+            <div id="questionContainer"></div>
+
+            <div class="ne-exam-actions">
+                <button type="button" id="previousQuestionBtn" class="ne-secondary-btn">
+                    ← Previous
+                </button>
+                <button type="button" id="nextQuestionBtn" class="ne-primary-btn">
+                    Next →
+                </button>
+                <button type="button" id="submitExamBtn" class="ne-primary-btn" hidden>
+                    Submit Exam
+                </button>
+            </div>
+
+            <p id="examStatus" class="ne-status" role="status"></p>
+        </section>
+
+        <section class="ne-card ne-results-section" id="resultsSection" hidden>
+            <span class="ne-step">STEP 03</span>
+            <h2>Your results</h2>
+            <p id="resultsSummary"></p>
+            <div id="resultsContainer"></div>
+            <button type="button" id="retryExamBtn" class="ne-primary-btn">
+                Create Another Exam
+            </button>
+        </section>
+
+        <section class="ne-note">
+            <strong>Study smarter, not harder.</strong>
+            <p>Your questions will be based on the notes you upload. Review your material before starting the exam.</p>
+        </section>
+    </main>
+
+    <script src="js/notes-exam.js"></script>
+</body>
+</html>

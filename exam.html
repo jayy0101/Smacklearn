@@ -197,7 +197,121 @@
         </section>
 
     </main>
+<!-- =====================================
+     EXAM INTERFACE
+====================================== -->
 
+<section id="examInterface" class="exam-interface" hidden>
+
+    <div class="exam-live-header">
+        <div>
+            <span class="exam-section-label">EXAM IN PROGRESS</span>
+            <h2 id="liveExamTitle">C Programming</h2>
+            <p id="liveExamDetails">20 Questions · Medium</p>
+        </div>
+
+        <div class="exam-live-timer">
+            <span>TIME REMAINING</span>
+            <strong id="examTimer">30:00</strong>
+        </div>
+    </div>
+
+    <div class="exam-progress-track">
+        <div id="examProgressBar"></div>
+    </div>
+
+    <div class="exam-live-layout">
+
+        <!-- QUESTION AREA -->
+
+        <div class="exam-question-card">
+
+            <div class="exam-question-top">
+                <span id="questionCounter">QUESTION 01</span>
+
+                <button
+                    type="button"
+                    id="reviewButton"
+                    class="exam-review-button"
+                >
+                    ☆ Mark for Review
+                </button>
+            </div>
+
+            <h3 id="questionText">Your question will appear here.</h3>
+
+            <div id="answerOptions" class="exam-answer-options"></div>
+
+            <div class="exam-question-navigation">
+
+                <button
+                    type="button"
+                    id="previousQuestion"
+                    class="exam-secondary-button"
+                >
+                    ← Previous
+                </button>
+
+                <button
+                    type="button"
+                    id="nextQuestion"
+                    class="exam-primary-button"
+                >
+                    Next Question →
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- QUESTION PALETTE -->
+
+        <aside class="exam-palette-card">
+
+            <h3>Question Palette</h3>
+
+            <p>Navigate through your examination.</p>
+
+            <div id="questionPalette" class="exam-question-palette"></div>
+
+            <div class="exam-palette-legend">
+                <span><i class="legend-answered"></i> Answered</span>
+                <span><i class="legend-unanswered"></i> Unanswered</span>
+                <span><i class="legend-review"></i> Review</span>
+            </div>
+
+            <div class="exam-palette-stats">
+
+                <div>
+                    <span>Answered</span>
+                    <strong id="answeredCount">0</strong>
+                </div>
+
+                <div>
+                    <span>Unanswered</span>
+                    <strong id="unansweredCount">20</strong>
+                </div>
+
+                <div>
+                    <span>For Review</span>
+                    <strong id="reviewCount">0</strong>
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                id="submitExam"
+                class="exam-submit-button"
+            >
+                Submit Examination ↗
+            </button>
+
+        </aside>
+
+    </div>
+
+</section>
     <script src="js/exam.js"></script>
 
 </body>

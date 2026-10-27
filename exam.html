@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080808">
+
+    <title>Exam Mode | Smacklearn</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/exam.css">
+</head>
+
+<body class="exam-page">
+
+    <header class="exam-header">
+        <a href="index.html" class="exam-brand">
+            <span class="exam-brand-icon">S</span>
+            <span>smack<span class="exam-brand-highlight">learn</span></span>
+        </a>
+
+        <nav class="exam-nav">
+            <a href="index.html">Home</a>
+            <a href="learning.html">Learning</a>
+            <a href="tutor.html">AI Tutor</a>
+            <a href="exam.html" class="active">Exam Mode</a>
+        </nav>
+
+        <a href="learning.html" class="exam-back-link">
+            Back to learning ↗
+        </a>
+    </header>
+
+    <main class="exam-main">
+
+        <section class="exam-intro">
+            <div class="exam-eyebrow">
+                <span class="exam-status-dot"></span>
+                YOUR PERSONAL EXAM ROOM
+            </div>
+
+            <h1>Prepare.<br><span>Perform.</span> Progress.</h1>
+
+            <p>
+                Test your knowledge under exam conditions.
+                Challenge yourself, track your performance,
+                and discover what to improve next.
+            </p>
+
+            <div class="exam-features">
+                <span>◷ Timed assessments</span>
+                <span>↗ Instant results</span>
+                <span>◎ Performance tracking</span>
+            </div>
+        </section>
+
+        <section class="exam-setup-card">
+
+            <div class="exam-card-heading">
+                <div>
+                    <span class="exam-section-label">CONFIGURATION</span>
+                    <h2>Set up your exam</h2>
+                    <p>Customize your session before you begin.</p>
+                </div>
+
+                <div class="exam-number-badge">01 / 04</div>
+            </div>
+
+            <form id="examSetupForm">
+
+                <div class="exam-form-group">
+                    <label for="examSubject">Choose your subject</label>
+
+                    <select id="examSubject" name="subject" required>
+                        <option value="C Programming">C Programming</option>
+                        <option value="C++">C++</option>
+                        <option value="Java">Java</option>
+                        <option value="Python">Python</option>
+                        <option value="DBMS">Database Management (DBMS)</option>
+                        <option value="Web Technology">Web Technology</option>
+                        <option value="Data Structures">Data Structures</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Computer Networks">Computer Networks</option>
+                        <option value="Operating Systems">Operating Systems</option>
+                    </select>
+                </div>
+
+                <div class="exam-form-group">
+                    <label>Difficulty level</label>
+
+                    <div class="exam-option-grid exam-difficulty-grid">
+
+                        <label class="exam-choice">
+                            <input type="radio" name="difficulty" value="Easy">
+                            <span class="exam-choice-content">
+                                <span class="exam-choice-icon">⌁</span>
+                                <strong>Easy</strong>
+                                <small>Build confidence</small>
+                            </span>
+                        </label>
+
+                        <label class="exam-choice">
+                            <input type="radio" name="difficulty" value="Medium" checked>
+                            <span class="exam-choice-content">
+                                <span class="exam-choice-icon">◈</span>
+                                <strong>Medium</strong>
+                                <small>Test your skills</small>
+                            </span>
+                        </label>
+
+                        <label class="exam-choice">
+                            <input type="radio" name="difficulty" value="Hard">
+                            <span class="exam-choice-content">
+                                <span class="exam-choice-icon">⚡</span>
+                                <strong>Hard</strong>
+                                <small>Push your limits</small>
+                            </span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="exam-settings-row">
+
+                    <div class="exam-form-group">
+                        <label for="examQuestions">Number of questions</label>
+
+                        <select id="examQuestions" name="questions">
+                            <option value="10">10 Questions</option>
+                            <option value="20" selected>20 Questions</option>
+                            <option value="30">30 Questions</option>
+                        </select>
+                    </div>
+
+                    <div class="exam-form-group">
+                        <label for="examDuration">Time limit</label>
+
+                        <select id="examDuration" name="duration">
+                            <option value="15">15 Minutes</option>
+                            <option value="30" selected>30 Minutes</option>
+                            <option value="60">60 Minutes</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="exam-info-box">
+                    <div class="exam-info-icon">i</div>
+
+                    <div>
+                        <strong>Before you begin</strong>
+                        <p>
+                            Your exam will be timed. You can navigate between
+                            questions and review your answers before submitting.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="exam-summary">
+                    <div>
+                        <span>SUBJECT</span>
+                        <strong id="summarySubject">C Programming</strong>
+                    </div>
+
+                    <div>
+                        <span>QUESTIONS</span>
+                        <strong id="summaryQuestions">20</strong>
+                    </div>
+
+                    <div>
+                        <span>DURATION</span>
+                        <strong id="summaryDuration">30 min</strong>
+                    </div>
+
+                    <div>
+                        <span>DIFFICULTY</span>
+                        <strong id="summaryDifficulty">Medium</strong>
+                    </div>
+                </div>
+
+                <button type="submit" class="exam-start-button">
+                    <span>Start examination</span>
+                    <span class="exam-button-arrow">↗</span>
+                </button>
+
+                <p class="exam-footer-note">
+                    Take your time to configure your session.
+                    Your timer starts when the exam begins.
+                </p>
+
+            </form>
+        </section>
+
+        <section class="exam-bottom-note">
+            <span>SMACKLEARN EXAM SYSTEM</span>
+            <span>Learn more. Know more. Do more.</span>
+        </section>
+
+    </main>
+
+    <script src="js/exam.js"></script>
+
+</body>
+</html>

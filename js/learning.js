@@ -808,7 +808,7 @@ function updateWeakSpotsDashboard() {
 // ==========================================
 
 async function generateAIStudyKit(notes, provider, difficulty, style) {
-    const response = await fetch("http://localhost:3000/api/study-kit", {
+    const response = await fetch("https://smacklearn-backend-1.vercel.app/api/study-kit", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

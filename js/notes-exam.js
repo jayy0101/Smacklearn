@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://smacklearn-backend-1.vercel.app";
 
 const notesFile = document.getElementById("notesFile");
 const generateExamBtn = document.getElementById("generateExamBtn");

@@ -5,7 +5,7 @@ const path = require("path");
 const { GoogleGenAI } = require("@google/genai");
 const Groq = require("groq-sdk");
 const multer = require("multer");
-const  PDFParse  = require("pdf-parse");
+const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
 
 dotenv.config({
@@ -239,7 +239,7 @@ app.post(
         });
     },
     async (req, res) => {
-        let parser;
+        
 
         try {
             if (!req.file) {
@@ -263,13 +263,9 @@ app.post(
 
                 extractedText = result.value;
             } else if (extension === ".pdf") {
-                parser = new PDFParse({
-                    data: req.file.buffer
-                });
-
-                const result = await parser.getText();
-                extractedText = result.text;
-            }
+    const result = await pdfParse(req.file.buffer);
+    extractedText = result.text;
+}
 
             extractedText = extractedText
                 .replace(/\u0000/g, "")
@@ -304,11 +300,7 @@ app.post(
             return res.status(500).json({
                 error: "Could not extract text from this file. Please try another file."
             });
-        } finally {
-            if (parser) {
-                await parser.destroy().catch(() => {});
-            }
-        }
+        } 
     }
 );
 // ============================================

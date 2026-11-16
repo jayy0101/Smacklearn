@@ -5,7 +5,7 @@ const path = require("path");
 const { GoogleGenAI } = require("@google/genai");
 const Groq = require("groq-sdk");
 const multer = require("multer");
-const { PDFParse } = require("pdf-parse");
+const  PDFParse  = require("pdf-parse");
 const mammoth = require("mammoth");
 
 dotenv.config({
